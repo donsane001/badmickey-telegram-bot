@@ -52,3 +52,75 @@ keyboard = InlineKeyboardMarkup(
         ],
     ]
 )
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🐭 Welcome to the BadMickey Bot!",
+        reply_markup=keyboard,
+    )
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        """
+Available Commands
+
+/start - Start the bot
+/help - Show help
+/website - Website
+/x - X Account
+/buy - Buy on Pump.fun
+/contract - Show Contract
+/telegram - Telegram Group
+/raid - Raid Message
+        """
+    )
+
+async def website(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(WEBSITE)
+
+async def x(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(X_LINK)
+
+async def buy(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(PUMPFUN)
+
+async def contract(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(CONTRACT)
+
+async def telegram(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(TG_LINK)
+
+async def raid(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🚀 RAID TIME!\n\nLike ❤️ Retweet 🔁 Comment 💬\n\nPush BadMickey everywhere! LFG! 🔥"
+    )
+
+async def auto_post(context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(
+        chat_id=GROUP_ID,
+        text=AUTO_POST,
+        reply_markup=keyboard,
+    )
+
+def main():
+    app = Application.builder().token(BOT_TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("website", website))
+    app.add_handler(CommandHandler("x", x))
+    app.add_handler(CommandHandler("buy", buy))
+    app.add_handler(CommandHandler("contract", contract))
+    app.add_handler(CommandHandler("telegram", telegram))
+    app.add_handler(CommandHandler("raid", raid))
+
+    app.job_queue.run_repeating(
+        auto_post,
+        interval=1200,
+        first=30,
+    )
+
+    print("BadMickey Bot Started...")
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()
